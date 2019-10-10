@@ -12,6 +12,8 @@ import sys
 class ConvertJournalService():
     def __init__(self, db_filename):
         self.db = TinyDB(db_filename)
+        # TODO cleanly handle new databases once the db becomes source of truth
+        # Alternatively, let's back up to text files?
         self.db.purge()
 
     def convert_files(self, filenames) -> None:
