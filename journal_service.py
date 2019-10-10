@@ -13,5 +13,6 @@ class JournalService():
 if __name__ == "__main__":
     journal_service = JournalService()
     documents = journal_service.get_entry("2016-01-10")
-    test_entry = JournalEntry.from_db_entry(documents[0])
-    print(test_entry)
+    if len(documents) > 0:
+        test_entry = JournalEntry.from_db_entry(documents[0])
+        print(test_entry)
