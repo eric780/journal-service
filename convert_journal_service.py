@@ -3,16 +3,16 @@ from dateutil import parser
 from tinydb import TinyDB, Query
 from journal_model import JournalEntry
 from typing import List
+import constants
 import glob
 import os
 import re
 import sys
 
-FILENAME = "db.json"
-
 class ConvertJournalService():
-    def __init__(self):
-        self.db = TinyDB(FILENAME)
+    def __init__(self, db_filename):
+        self.db = TinyDB(db_filename)
+        self.db.purge()
 
     def convert_files(self, filenames) -> None:
         for journal_filename in filenames:
@@ -20,10 +20,27 @@ class ConvertJournalService():
                 journal_year = journal_filename.rsplit(".txt", 1)[0]
                 lines = journal_file.readlines()
                 print("Processing year: ", journal_year)
-                print("File length: ", len(lines))
-                processed_entries = ConvertJournalService().process_lines(journal_year, lines)
+                processed_entries = self.process_lines(journal_year, lines)
                 # put these into DB
-                self.db.insert_multiple({'date': entry.getDate(), 'entry': entry.getContent()} for (date,entry) in processed_entries.items())
+                self.db.insert_multiple(
+                    {'date': entry.getDate(), 'entry': entry.getContent()} 
+                        for (date,entry) in processed_entries.items())
+
+        print("All values added to db!")
+
+        # sanity check
+        print("Running sanity check on database...")
+        date_set = set()
+        sanity_check_success = True
+        for entry in self.db.all():
+            if entry['date'] in date_set:
+                print("Sanity check failed, duplicate entry found for: ", entry['date'])
+                sanity_check_success = False
+            date_set.add(entry['date'])
+
+        if sanity_check_success:
+            print("Sanity Check success. No duplicate entries.")
+
 
     def process_lines(self, year, lines) -> List[JournalEntry]:
         """
@@ -40,7 +57,6 @@ class ConvertJournalService():
             if self.is_valid_date(line):
                 # we have a valid date
                 date = parser.parse(line)
-                print("Processing date: ", date)
     
                 # flush existing
                 if current_date is not None:
@@ -72,4 +88,4 @@ class ConvertJournalService():
         return re.match('[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]\n', line)
 
 if __name__ == "__main__":
-    ConvertJournalService().convert_files(glob.glob("*.txt"))
+    ConvertJournalService(constants.DB_FILENAME).convert_files(glob.glob("*.txt"))
