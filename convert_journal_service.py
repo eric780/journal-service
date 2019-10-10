@@ -42,7 +42,7 @@ class ConvertJournalService():
 
         if sanity_check_success:
             print("Sanity Check success. No duplicate entries.")
-
+            
 
     def process_lines(self, year, lines) -> List[JournalEntry]:
         """

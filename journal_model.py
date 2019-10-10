@@ -1,4 +1,5 @@
 from datetime import date
+from dateutil import parser
 
 class JournalEntry():
     def __init__(self, date, content):
@@ -11,7 +12,6 @@ class JournalEntry():
     def __repr__(self):
         return self._to_string()
 
-
     def _to_string(self) -> str:
         return self.getDate() + "\n" + self.getContent()
 
@@ -20,3 +20,6 @@ class JournalEntry():
 
     def getContent(self) -> str:
         return self.content
+
+    def from_db_entry(entry):
+        return JournalEntry(parser.parse(entry['date']), entry['entry'])
