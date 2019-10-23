@@ -17,3 +17,9 @@ To expand on this, we can be smart about what entries are missing (check the cur
 ### Endpoints
 - `get_entry(date: str) -> str`
 - `add_entry(date: str, content: str) -> OK`
+
+
+## Getting Started
+From the /backend/ directory, run `python manage.py runserver` to start the backend service at localhost:8000
+
+From the root directory, run `yarn start` to initialize the react app at localhost:3000
