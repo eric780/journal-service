@@ -23,6 +23,7 @@ function App() {
         </a>
       </header>
       <JournalEntrySearchComponent/>
+      <JournalEntryViewAllComponent/>
     </div>
   );
 }
@@ -44,7 +45,6 @@ class JournalEntrySearchComponent extends React.Component {
     console.log(event);
     console.log("clicked");
     console.log("value: ", this.state.searchText);
-    axios.get("http://localhost:8000/api/entries").then(res => console.log(res));
   }
 
   onSearchTextChanged(event) {
@@ -62,6 +62,45 @@ class JournalEntrySearchComponent extends React.Component {
           Search For Entry
         </Button>
       </Form>
+    );
+  }
+}
+
+class JournalEntryViewAllComponent extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      entries: [],
+    }
+  }
+
+  componentDidMount() {
+    this.refresh();
+  }
+
+  refresh = () => {
+    axios
+      .get("http://localhost:8000/api/entries/")
+      .then(res => {this.setState({entries: res.data}); console.log(res.data);})
+      .catch(err => console.log(err));
+  };
+
+  renderEntries = () => {
+    return this.state.entries.map(entry => (
+      <li>
+        <span>{entry.date}</span>
+        <span>{entry.content}</span>
+      </li>
+      )
+    );
+  };
+
+  render() {
+    return (
+      <ul>
+        {this.renderEntries()}
+      </ul>
     );
   }
 }
