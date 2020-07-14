@@ -1,14 +1,14 @@
 # Journal App
 ## Product Spec
 A simple local app that allows viewing, editing, and adding journal entries. Everything is run on a local server with a database.
-The landing page will have the following options: 
-1) Search for a particular entry 
+The landing page will have the following options:
+1) Search for a particular entry
 2) Add new entry
 3) View all entries
 
 ### Searching for entries
 **P0**
-Super simple date-string lookup (format; `YYYY-MM-DD`). 
+Super simple date-string lookup (format; `YYYY-MM-DD`).
 **P1**
 Eventually show a calendar view with markings on which dates have entries.
 **P2**
@@ -20,9 +20,10 @@ Optional: We can also support editing on any entry that is displayed as a result
 **P0**
 Super simple new entry functionality by having the client pass in a date and some text. This will need to be safe and not allow overwrites on existing entries, or at least have some confirmation.
 The editor can be a really basic text box. We can apply a line width restriction on the client side.
+It would be nice if we could open a vim instance to capture text.
 
 **P1**
-We can be smart about what entries are missing (check the current date, any previous missing dates). 
+We can be smart about what entries are missing (check the current date, any previous missing dates).
 
 ### Viewing all entries
 **P0**
